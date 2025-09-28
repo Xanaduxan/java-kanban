@@ -2,11 +2,13 @@ package ru.yandex.javacourse.schedule.tasks;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.javacourse.schedule.manager.InMemoryTaskManager;
+import ru.yandex.javacourse.schedule.manager.Managers;
 import ru.yandex.javacourse.schedule.manager.TaskManager;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.yandex.javacourse.schedule.tasks.TaskStatus.NEW;
 
 public class EpicTest {
 
@@ -22,8 +24,8 @@ public class EpicTest {
         TaskManager manager = new InMemoryTaskManager();
 
         int epicId = manager.addNewEpic(new Epic("Epic 1", "Testing epic 1"));
-        Integer s1 = manager.addNewSubtask(new Subtask("S1", "d1", TaskStatus.NEW, epicId));
-        Integer s2 = manager.addNewSubtask(new Subtask("S2", "d2", TaskStatus.NEW, epicId));
+        Integer s1 = manager.addNewSubtask(new Subtask("S1", "d1", NEW, epicId));
+        Integer s2 = manager.addNewSubtask(new Subtask("S2", "d2", NEW, epicId));
 
         Epic epic = manager.getEpic(epicId);
 
@@ -37,7 +39,31 @@ public class EpicTest {
         assertFalse(epic.getSubtaskIds().contains(s1), "deleted subtask id must be removed from epic");
         assertEquals(1, epic.getSubtaskIds().size());
     }
+    @Test
+    void deleteAllTasksEpicsAndSubtasks_clearsEverything() {
+        TaskManager manager = Managers.getDefault();
 
 
+        int taskId = manager.addNewTask(new Task("Task1", "desc", NEW));
+        int epicId = manager.addNewEpic(new Epic("Epic1", "epic"));
+        int subId = manager.addNewSubtask(new Subtask("Subtask1", "desc", NEW, epicId));
+
+
+        manager.getTask(taskId);
+        manager.getEpic(epicId);
+        manager.getSubtask(subId);
+        assertFalse(manager.getHistory().isEmpty(), "History should not be empty before deletion");
+
+
+        manager.deleteTasks();
+        manager.deleteSubtasks();
+        manager.deleteEpics();
+
+
+        assertTrue(manager.getTasks().isEmpty(), "All tasks should be deleted");
+        assertTrue(manager.getSubtasks().isEmpty(), "All subtasks should be deleted");
+        assertTrue(manager.getEpics().isEmpty(), "All epics should be deleted");
+        assertTrue(manager.getHistory().isEmpty(), "History should be cleared as well");
+    }
 
 }

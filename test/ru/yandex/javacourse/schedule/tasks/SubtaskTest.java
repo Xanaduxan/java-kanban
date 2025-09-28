@@ -75,20 +75,29 @@ public class SubtaskTest {
 
         boolean found = false;
         for (Subtask st : taskManager.getSubtasks()) {
-            if (st.getId() == oldId) { found = true; break; }
+            if (st.getId() == oldId) {
+                found = true;
+                break;
+            }
         }
         assertFalse(found, "Deleted subtask must not remain in storage");
 
         Epic epic = taskManager.getEpic(epicId);
         boolean idInEpic = false;
         for (int id : epic.getSubtaskIds()) {
-            if (id == oldId) { idInEpic = true; break; }
+            if (id == oldId) {
+                idInEpic = true;
+                break;
+            }
         }
         assertFalse(idInEpic, "Epic must not contain a stale subtask id");
 
         boolean inHistory = false;
         for (Task t : taskManager.getHistory()) {
-            if (t.getId() == oldId) { inHistory = true; break; }
+            if (t.getId() == oldId) {
+                inHistory = true;
+                break;
+            }
         }
         assertFalse(inHistory, "Deleted subtask must not remain in history");
 

@@ -14,7 +14,7 @@ public class InMemoryHistoryManagerTest {
     HistoryManager historyManager;
 
     @BeforeEach
-    public void initHistoryManager(){
+    public void initHistoryManager() {
         historyManager = Managers.getDefaultHistory();
         for (Task t : new ArrayList<>(historyManager.getHistory())) {
             historyManager.remove(t.getId());
@@ -22,7 +22,7 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void testHistoricVersions(){
+    public void testHistoricVersions() {
         TaskManager taskManager = new InMemoryTaskManager();
         Task task = new Task("Test 1", "Testing task 1", TaskStatus.NEW);
 

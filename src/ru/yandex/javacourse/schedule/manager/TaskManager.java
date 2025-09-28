@@ -12,43 +12,43 @@ import ru.yandex.javacourse.schedule.tasks.Task;
  * @author Vladimir Ivanov (ivanov.vladimir.l@gmail.com)
  */
 public interface TaskManager {
-	List<Task> getTasks();
+    List<Task> getTasks();
 
-	List<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
-	List<Epic> getEpics();
+    List<Epic> getEpics();
 
-	List<Subtask> getEpicSubtasks(int epicId);
+    List<Subtask> getEpicSubtasks(int epicId);
 
-	Task getTask(int id);
+    Task getTask(int id);
 
-	Subtask getSubtask(int id);
+    Subtask getSubtask(int id);
 
-	Epic getEpic(int id);
+    Epic getEpic(int id);
 
-	int addNewTask(Task task);
+    int addNewTask(Task task);
 
-	int addNewEpic(Epic epic);
+    int addNewEpic(Epic epic);
 
-	Integer addNewSubtask(Subtask subtask);
+    Integer addNewSubtask(Subtask subtask);
 
-	void updateTask(Task task);
+    void updateTask(Task task);
 
-	void updateEpic(Epic epic);
+    void updateEpic(Epic epic);
 
-	void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask);
 
-	void deleteTask(int id);
+    void deleteTask(int id);
 
-	void deleteEpic(int id);
+    void deleteEpic(int id);
 
-	void deleteSubtask(int id);
+    void deleteSubtask(int id);
 
-	void deleteTasks();
+    void deleteTasks();
 
-	void deleteSubtasks();
+    void deleteSubtasks();
 
-	void deleteEpics();
+    void deleteEpics();
 
-	List<Task> getHistory();
+    List<Task> getHistory();
 }
