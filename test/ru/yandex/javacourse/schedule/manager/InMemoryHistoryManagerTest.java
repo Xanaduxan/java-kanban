@@ -8,7 +8,6 @@ import ru.yandex.javacourse.schedule.tasks.TaskStatus;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class InMemoryHistoryManagerTest {
 
@@ -39,7 +38,7 @@ public class InMemoryHistoryManagerTest {
         taskManager.getTask(id);
 
         assertEquals(1, taskManager.getHistory().size(), "A repeated view should not create a duplicate");
-        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getHistory().get(0).getStatus());
+        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getHistory().getFirst().getStatus());
     }
 
     @Test
@@ -51,16 +50,16 @@ public class InMemoryHistoryManagerTest {
         Task task = taskManager.getTask(id);
         assertEquals(1, taskManager.getHistory().size(), "An entry should appear in the history");
 
-        assertEquals(task, taskManager.getHistory().get(0), "History should store the same object");
-        assertEquals(TaskStatus.NEW, taskManager.getHistory().get(0).getStatus(), "The initial status is preserved");
+        assertEquals(task, taskManager.getHistory().getFirst(), "History should store the same object");
+        assertEquals(TaskStatus.NEW, taskManager.getHistory().getFirst().getStatus(), "The initial status is preserved");
 
         task.setStatus(TaskStatus.IN_PROGRESS);
         taskManager.updateTask(task);
 
         taskManager.getTask(id);
         assertEquals(1, taskManager.getHistory().size(), "A repeated view should not create a duplicate");
-        assertEquals(task, taskManager.getHistory().get(0), "The reference in history should remain the same");
-        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getHistory().get(0).getStatus(),
+        assertEquals(task, taskManager.getHistory().getFirst(), "The reference in history should remain the same");
+        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getHistory().getFirst().getStatus(),
                 "The history should contain the updated status");
     }
 
@@ -73,7 +72,7 @@ public class InMemoryHistoryManagerTest {
         tm.getTask(id);
 
         assertEquals(1, tm.getHistory().size());
-        assertEquals(id, tm.getHistory().get(0).getId());
+        assertEquals(id, tm.getHistory().getFirst().getId());
     }
 
 }
