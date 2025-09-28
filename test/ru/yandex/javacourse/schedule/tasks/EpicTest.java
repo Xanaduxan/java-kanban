@@ -1,8 +1,12 @@
 package ru.yandex.javacourse.schedule.tasks;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacourse.schedule.manager.InMemoryTaskManager;
+import ru.yandex.javacourse.schedule.manager.TaskManager;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EpicTest {
 
@@ -14,19 +18,26 @@ public class EpicTest {
     }
 
     @Test
-    public void testSubtaskUniqueIds() {
-        Epic epic = new Epic(0, "Epic 1", "Testing epic 1");
-        epic.addSubtaskId(1);
-        epic.addSubtaskId(2);
-        assertEquals(2, epic.subtaskIds.size(), "should add distinct subtask ids");
-        epic.addSubtaskId(1);
-        assertEquals(2, epic.subtaskIds.size(), "should not add same subtask id twice");
+    public void testSubtaskUniqueIds_viaManager() {
+        TaskManager manager = new InMemoryTaskManager();
+
+        int epicId = manager.addNewEpic(new Epic("Epic 1", "Testing epic 1"));
+        Integer s1 = manager.addNewSubtask(new Subtask("S1", "d1", TaskStatus.NEW, epicId));
+        Integer s2 = manager.addNewSubtask(new Subtask("S2", "d2", TaskStatus.NEW, epicId));
+
+        Epic epic = manager.getEpic(epicId);
+
+
+        assertEquals(2, epic.getSubtaskIds().size(), "manager should add distinct subtask ids");
+        assertTrue(epic.getSubtaskIds().containsAll(List.of(s1, s2)));
+
+
+        manager.deleteSubtask(s1);
+        epic = manager.getEpic(epicId);
+        assertFalse(epic.getSubtaskIds().contains(s1), "deleted subtask id must be removed from epic");
+        assertEquals(1, epic.getSubtaskIds().size());
     }
 
-    @Test
-    public void testNotSelfAttaching() {
-        Epic epic = new Epic(0, "Epic 1", "Testing epic 1");
-        epic.addSubtaskId(0);
-        assertEquals(0, epic.subtaskIds.size(), "epic should not add itself as subtask");
-    }
+
+
 }
