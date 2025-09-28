@@ -24,7 +24,7 @@ public class InMemoryHistoryManagerTest {
     @Test
     public void testHistoricVersions(){
         TaskManager taskManager = new InMemoryTaskManager();
-        Task task = new Task("Test 1", "Testiong task 1", TaskStatus.NEW);
+        Task task = new Task("Test 1", "Testing task 1", TaskStatus.NEW);
 
         int id = taskManager.addNewTask(task);
 
