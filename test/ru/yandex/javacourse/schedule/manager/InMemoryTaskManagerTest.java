@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryTaskManagerTest {
 
-    TaskManager manager;
+    private TaskManager manager;
 
     @BeforeEach
     public void initManager() {

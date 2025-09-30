@@ -11,11 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryHistoryManagerTest {
 
-    HistoryManager historyManager;
-
     @BeforeEach
     public void initHistoryManager() {
-        historyManager = Managers.getDefaultHistory();
+        HistoryManager historyManager = Managers.getDefaultHistory();
         for (Task t : new ArrayList<>(historyManager.getHistory())) {
             historyManager.remove(t.getId());
         }

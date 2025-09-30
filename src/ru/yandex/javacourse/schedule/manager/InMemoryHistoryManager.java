@@ -21,8 +21,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         List<Task> result = new ArrayList<>(size);
         Node<Task> currentHead = head;
         while (currentHead != null) {
-            result.add(currentHead.data);
-            currentHead = currentHead.next;
+            result.add(currentHead.getData());
+            currentHead = currentHead.getNext();
         }
         return result;
     }
@@ -40,10 +40,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     }
 
-    public void addNewNode(Task task) {
+    private void addNewNode(Task task) {
         Node<Task> newNode = new Node<>(tail, task, null);
         if (tail != null) {
-            tail.next = newNode;
+            tail.setNext(newNode);
         } else {
             head = newNode;
         }
@@ -55,20 +55,20 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private void removeNode(Node<Task> node) {
         if (node == null) return;
-        Node<Task> prev = node.prev;
-        Node<Task> next = node.next;
+        Node<Task> prev = node.getPrev();
+        Node<Task> next = node.getNext();
 
         if (prev != null) {
-            prev.next = next;
+            prev.setNext(next);
         } else {
             head = next;
         }
         if (next != null) {
-            next.prev = prev;
+            next.setPrev(prev);
         } else {
             tail = prev;
         }
-        Task taskToRemove = node.data;
+        Task taskToRemove = node.getData();
         if (taskToRemove != null) {
             history.remove(taskToRemove.getId());
         }
@@ -84,15 +84,5 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     }
 
-    private static class Node<E> {
-        E data;
-        Node<E> next;
-        Node<E> prev;
 
-        Node(Node<E> prev, E data, Node<E> next) {
-            this.prev = prev;
-            this.data = data;
-            this.next = next;
-        }
-    }
 }
