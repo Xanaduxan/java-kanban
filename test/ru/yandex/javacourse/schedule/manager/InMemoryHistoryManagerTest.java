@@ -5,35 +5,72 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.javacourse.schedule.tasks.Task;
 import ru.yandex.javacourse.schedule.tasks.TaskStatus;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryHistoryManagerTest {
 
-    HistoryManager historyManager;
-
     @BeforeEach
-    public void initHistoryManager(){
-        historyManager = Managers.getDefaultHistory();
+    public void initHistoryManager() {
+        HistoryManager historyManager = Managers.getDefaultHistory();
+        for (Task t : new ArrayList<>(historyManager.getHistory())) {
+            historyManager.remove(t.getId());
+        }
     }
 
     @Test
-    public void testHistoricVersions(){
-        Task task = new Task("Test 1", "Testiong task 1", TaskStatus.NEW);
-        historyManager.addTask(task);
-        assertEquals(1, historyManager.getHistory().size(), "historic task should be added");
+    public void testHistoricVersions() {
+        TaskManager taskManager = new InMemoryTaskManager();
+        Task task = new Task("Test 1", "Testing task 1", TaskStatus.NEW);
+
+        int id = taskManager.addNewTask(task);
+
+        assertEquals(0, taskManager.getHistory().size());
+
+        taskManager.getTask(id);
+        assertEquals(1, taskManager.getHistory().size(), "The first view should add an entry");
+
         task.setStatus(TaskStatus.IN_PROGRESS);
-        historyManager.addTask(task);
-        assertEquals(2, historyManager.getHistory().size(), "historic task should be added");
+        taskManager.updateTask(task);
+        taskManager.getTask(id);
+
+        assertEquals(1, taskManager.getHistory().size(), "A repeated view should not create a duplicate");
+        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getHistory().getFirst().getStatus());
     }
 
     @Test
-    public void testHistoricVersionsByPointer(){
-        Task task = new Task("Test 1", "Testiong task 1", TaskStatus.NEW);
-        historyManager.addTask(task);
-        assertEquals(task.getStatus(), historyManager.getHistory().get(0).getStatus(), "historic task should be stored");
+    public void testHistoricVersionsByPointer() {
+        TaskManager taskManager = new InMemoryTaskManager();
+
+        int id = taskManager.addNewTask(new Task("Test 1", "Testing task 1", TaskStatus.NEW));
+
+        Task task = taskManager.getTask(id);
+        assertEquals(1, taskManager.getHistory().size(), "An entry should appear in the history");
+
+        assertEquals(task, taskManager.getHistory().getFirst(), "History should store the same object");
+        assertEquals(TaskStatus.NEW, taskManager.getHistory().getFirst().getStatus(), "The initial status is preserved");
+
         task.setStatus(TaskStatus.IN_PROGRESS);
-        historyManager.addTask(task);
-        assertEquals(TaskStatus.NEW, historyManager.getHistory().get(0).getStatus(), "historic task should not be changed");
+        taskManager.updateTask(task);
+
+        taskManager.getTask(id);
+        assertEquals(1, taskManager.getHistory().size(), "A repeated view should not create a duplicate");
+        assertEquals(task, taskManager.getHistory().getFirst(), "The reference in history should remain the same");
+        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getHistory().getFirst().getStatus(),
+                "The history should contain the updated status");
+    }
+
+    @Test
+    void historyHasNoDuplicates() {
+        TaskManager tm = new InMemoryTaskManager();
+        int id = tm.addNewTask(new Task("A", "d", TaskStatus.NEW));
+
+        tm.getTask(id);
+        tm.getTask(id);
+
+        assertEquals(1, tm.getHistory().size());
+        assertEquals(id, tm.getHistory().getFirst().getId());
     }
 
 }
