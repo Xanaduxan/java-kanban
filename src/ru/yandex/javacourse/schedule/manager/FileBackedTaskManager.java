@@ -154,7 +154,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-
     private void save() {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             bufferedWriter.write(HEADER);
