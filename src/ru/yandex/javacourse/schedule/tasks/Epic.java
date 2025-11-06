@@ -8,31 +8,31 @@ import java.util.List;
 
 public class Epic extends Task {
     private LocalDateTime endTime;
-	protected ArrayList<Integer> subtaskIds = new ArrayList<>();
+    protected ArrayList<Integer> subtaskIds = new ArrayList<>();
 
-	public Epic(int id, String name, String description) {
-		super(id, name, description, NEW);
-	}
+    public Epic(int id, String name, String description) {
+        super(id, name, description, NEW);
+    }
 
-	public Epic(String name, String description) {
-		super(name, description, NEW);
-	}
+    public Epic(String name, String description) {
+        super(name, description, NEW);
+    }
 
-	public void addSubtaskId(int id) {
-		subtaskIds.add(id);
-	}
+    public void addSubtaskId(int id) {
+        subtaskIds.add(id);
+    }
 
-	public List<Integer> getSubtaskIds() {
-		return subtaskIds;
-	}
+    public List<Integer> getSubtaskIds() {
+        return subtaskIds;
+    }
 
-	public void cleanSubtaskIds() {
-		subtaskIds.clear();
-	}
+    public void cleanSubtaskIds() {
+        subtaskIds.clear();
+    }
 
-	public void removeSubtask(int id) {
-		subtaskIds.remove(Integer.valueOf(id));
-	}
+    public void removeSubtask(int id) {
+        subtaskIds.remove(Integer.valueOf(id));
+    }
 
     @Override
     public LocalDateTime getEndTime() {
@@ -40,17 +40,17 @@ public class Epic extends Task {
     }
 
     public void setEndTime(LocalDateTime endTime) {
-        this.endTime= endTime;
+        this.endTime = endTime;
     }
 
-	@Override
-	public String toString() {
-		return "Epic{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", status=" + status +
-				", description='" + description + '\'' +
-				", subtaskIds=" + subtaskIds +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", description='" + description + '\'' +
+                ", subtaskIds=" + subtaskIds +
+                '}';
+    }
 }
