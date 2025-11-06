@@ -13,6 +13,8 @@ import ru.yandex.javacourse.schedule.tasks.Task;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,8 +32,10 @@ public class Main {
         final int epicId1 = manager.addNewEpic(epic1);
         final int epicId2 = manager.addNewEpic(epic2);
 
-        Subtask subtask1 = new Subtask("Subtask #1-1", "Subtask1 description", NEW, epicId1);
-        Subtask subtask2 = new Subtask("Subtask #2-1", "Subtask1 description", NEW, epicId1);
+        Subtask subtask1 = new Subtask("Subtask #1-1", "Subtask1 description", NEW, epicId1, Duration.ofMinutes(30),
+                LocalDateTime.of(2025, 11, 6, 10, 0));
+        Subtask subtask2 = new Subtask("Subtask #2-1", "Subtask1 description", NEW, epicId1,  Duration.ofMinutes(45),
+                LocalDateTime.of(2025, 11, 6, 11, 0));
         Subtask subtask3 = new Subtask("Subtask #3-2", "Subtask1 description", DONE, epicId2);
         manager.addNewSubtask(subtask1);
         final Integer subtaskId2 = manager.addNewSubtask(subtask2);
@@ -88,7 +92,7 @@ public class Main {
         System.out.println("DELETE: Task1");
         manager.deleteTask(taskId1);
         System.out.println("DELETE: Epic1");
-        manager.deleteEpic(epicId1);
+//        manager.deleteEpic(epicId1);
         printAllTasks(manager);
 
 
