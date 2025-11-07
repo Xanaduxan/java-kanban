@@ -6,8 +6,10 @@ import ru.yandex.javacourse.schedule.tasks.Task;
 import ru.yandex.javacourse.schedule.tasks.TaskStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InMemoryHistoryManagerTest {
 
@@ -71,6 +73,30 @@ public class InMemoryHistoryManagerTest {
 
         assertEquals(1, tm.getHistory().size());
         assertEquals(id, tm.getHistory().getFirst().getId());
+    }
+    @Test
+    void removeFromHistoryBeginningMiddleEnd() {
+        HistoryManager history = Managers.getDefaultHistory();
+
+        Task t1 = new Task("T1", "desc", TaskStatus.NEW);
+        t1.setId(1);
+        Task t2 = new Task("T2", "desc", TaskStatus.NEW);
+        t2.setId(2);
+        Task t3 = new Task("T3", "desc", TaskStatus.NEW);
+        t3.setId(3);
+
+        history.add(t1);
+        history.add(t2);
+        history.add(t3);
+
+        history.remove(1);
+        assertEquals(List.of(t2, t3), history.getHistory());
+
+        history.remove(2);
+        assertEquals(List.of(t3), history.getHistory());
+
+        history.remove(3);
+        assertTrue(history.getHistory().isEmpty());
     }
 
 }

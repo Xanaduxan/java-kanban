@@ -2,44 +2,55 @@ package ru.yandex.javacourse.schedule.tasks;
 
 import static ru.yandex.javacourse.schedule.tasks.TaskStatus.NEW;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-	protected ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private LocalDateTime endTime;
+    protected ArrayList<Integer> subtaskIds = new ArrayList<>();
 
-	public Epic(int id, String name, String description) {
-		super(id, name, description, NEW);
-	}
+    public Epic(int id, String name, String description) {
+        super(id, name, description, NEW);
+    }
 
-	public Epic(String name, String description) {
-		super(name, description, NEW);
-	}
+    public Epic(String name, String description) {
+        super(name, description, NEW);
+    }
 
-	public void addSubtaskId(int id) {
-		subtaskIds.add(id);
-	}
+    public void addSubtaskId(int id) {
+        subtaskIds.add(id);
+    }
 
-	public List<Integer> getSubtaskIds() {
-		return subtaskIds;
-	}
+    public List<Integer> getSubtaskIds() {
+        return subtaskIds;
+    }
 
-	public void cleanSubtaskIds() {
-		subtaskIds.clear();
-	}
+    public void cleanSubtaskIds() {
+        subtaskIds.clear();
+    }
 
-	public void removeSubtask(int id) {
-		subtaskIds.remove(Integer.valueOf(id));
-	}
+    public void removeSubtask(int id) {
+        subtaskIds.remove(Integer.valueOf(id));
+    }
 
-	@Override
-	public String toString() {
-		return "Epic{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", status=" + status +
-				", description='" + description + '\'' +
-				", subtaskIds=" + subtaskIds +
-				'}';
-	}
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", description='" + description + '\'' +
+                ", subtaskIds=" + subtaskIds +
+                '}';
+    }
 }
