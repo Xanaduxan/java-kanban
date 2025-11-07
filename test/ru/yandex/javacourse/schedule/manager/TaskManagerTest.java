@@ -13,7 +13,8 @@ import static ru.yandex.javacourse.schedule.tasks.TaskStatus.*;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
 
-    protected T manager;
+    private T manager;
+
     protected abstract T createManager();
 
     @BeforeEach
