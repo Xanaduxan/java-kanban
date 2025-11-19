@@ -27,13 +27,15 @@ import java.util.List;
 
 public class HttpTaskServer {
 
-    private static final int PORT = 8080;
+    private static final URI BASE_URI = URI.create("http://localhost:8080");
+    private static final int PORT = BASE_URI.getPort();
 
     private final HttpServer httpServer;
     private final TaskManager manager;
-    private final Gson gson = new GsonBuilder()
+    private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Duration.class, new DurationAdapter())
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
 
     public HttpTaskServer(TaskManager manager) throws IOException {
         this.manager = manager;
@@ -45,7 +47,6 @@ public class HttpTaskServer {
         httpServer.createContext("/history", new HistoryHandler());
         httpServer.createContext("/prioritized", new PrioritizedHandler());
     }
-
 
     public HttpTaskServer() throws IOException {
         this(Managers.getDefault());
@@ -91,12 +92,6 @@ public class HttpTaskServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             String method = exchange.getRequestMethod();
-            URI uri = exchange.getRequestURI();
-            String path = uri.getPath();
-            String query = uri.getQuery();
-
-            System.out.println("Обработка " + method + " " + path + (query != null ? ("?" + query) : ""));
-
             try {
                 switch (method) {
                     case "GET":
@@ -120,245 +115,191 @@ public class HttpTaskServer {
             }
         }
 
-        private void handleGet(HttpExchange exchange) throws IOException {
-            String query = exchange.getRequestURI().getQuery();
-
-            if (query == null) {
-                List<T> all = getAll();
-                String json = gson.toJson(all);
-                sendText(exchange, json);
-            } else {
-                String[] parts = query.split("=");
-                if (parts.length == 2 && "id".equals(parts[0])) {
-                    int id = Integer.parseInt(parts[1]);
-                    T entity = getById(id);
-                    String json = gson.toJson(entity);
-                    sendText(exchange, json);
-                } else {
-                    sendServerError(exchange);
+        private Integer extractId(HttpExchange exchange) {
+            String path = exchange.getRequestURI().getPath();
+            String[] parts = path.split("/");
+            if (parts.length > 2) {
+                try {
+                    return Integer.parseInt(parts[2]);
+                } catch (NumberFormatException ignored) {
                 }
+            }
+            return null;
+        }
+
+        private void handleGet(HttpExchange exchange) throws IOException {
+            Integer id = extractId(exchange);
+            if (id == null) {
+                sendText(exchange, gson.toJson(getAll()));
+            } else {
+                sendText(exchange, gson.toJson(getById(id)));
             }
         }
 
         private void handlePost(HttpExchange exchange) throws IOException {
-            String body = readBody(exchange);
-            T entity = gson.fromJson(body, getEntityClass());
-
+            T entity = gson.fromJson(readBody(exchange), getEntityClass());
+            Integer idFromPath = extractId(exchange);
+            if (idFromPath != null) {
+                entity.setId(idFromPath);
+            }
             if (entity.getId() == 0) {
                 create(entity);
             } else {
                 update(entity);
             }
-
             exchange.sendResponseHeaders(201, 0);
             exchange.close();
         }
 
         private void handleDelete(HttpExchange exchange) throws IOException {
-            String query = exchange.getRequestURI().getQuery();
-
-            if (query == null) {
+            Integer id = extractId(exchange);
+            if (id == null) {
                 deleteAll();
             } else {
-                String[] parts = query.split("=");
-                if (parts.length == 2 && "id".equals(parts[0])) {
-                    int id = Integer.parseInt(parts[1]);
-                    deleteById(id);
-                } else {
-                    sendServerError(exchange);
-                    return;
-                }
+                deleteById(id);
             }
-
-            exchange.sendResponseHeaders(201, 0);
+            exchange.sendResponseHeaders(200, 0);
             exchange.close();
         }
     }
 
     class TasksHandler extends EntityHandler<Task> {
-
-        @Override
         protected Class<Task> getEntityClass() {
             return Task.class;
         }
 
-        @Override
         protected List<Task> getAll() {
             return manager.getTasks();
         }
 
-        @Override
         protected Task getById(int id) {
             return manager.getTask(id);
         }
 
-        @Override
         protected void create(Task entity) {
             manager.addNewTask(entity);
         }
 
-        @Override
         protected void update(Task entity) {
             manager.updateTask(entity);
         }
 
-        @Override
         protected void deleteAll() {
             manager.deleteTasks();
         }
 
-        @Override
         protected void deleteById(int id) {
             manager.deleteTask(id);
         }
     }
 
     class SubtasksHandler extends EntityHandler<Subtask> {
-
-        @Override
         protected Class<Subtask> getEntityClass() {
             return Subtask.class;
         }
 
-        @Override
         protected List<Subtask> getAll() {
             return manager.getSubtasks();
         }
 
-        @Override
         protected Subtask getById(int id) {
             return manager.getSubtask(id);
         }
 
-        @Override
         protected void create(Subtask entity) {
-            if (entity.getEpicId() == 0) {
-                throw new NotFoundException("epicId не передан или равен 0");
-            }
+            if (entity.getEpicId() == 0) throw new NotFoundException("epicId не передан или равен 0");
             manager.addNewSubtask(entity);
         }
 
-        @Override
         protected void update(Subtask entity) {
             manager.updateSubtask(entity);
         }
 
-        @Override
         protected void deleteAll() {
             manager.deleteSubtasks();
         }
 
-        @Override
         protected void deleteById(int id) {
             manager.deleteSubtask(id);
         }
     }
 
     class EpicsHandler extends EntityHandler<Epic> {
-
-        @Override
         protected Class<Epic> getEntityClass() {
             return Epic.class;
         }
 
-        @Override
         protected List<Epic> getAll() {
             return manager.getEpics();
         }
 
-        @Override
         protected Epic getById(int id) {
             return manager.getEpic(id);
         }
 
-        @Override
         protected void create(Epic entity) {
             manager.addNewEpic(entity);
         }
 
-        @Override
         protected void update(Epic entity) {
             manager.updateEpic(entity);
         }
 
-        @Override
         protected void deleteAll() {
             manager.deleteEpics();
         }
 
-        @Override
         protected void deleteById(int id) {
             manager.deleteEpic(id);
         }
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String method = exchange.getRequestMethod();
-            String path = exchange.getRequestURI().getPath();
-            String[] parts = path.split("/");
+            try {
+                String method = exchange.getRequestMethod();
+                String path = exchange.getRequestURI().getPath();
+                String[] parts = path.split("/");
 
-            if ("GET".equals(method) && parts.length == 4 && "epics".equals(parts[1]) && "subtasks".equals(parts[3])) {
+                if ("GET".equals(method)
+                        && parts.length == 4
+                        && "epics".equals(parts[1])
+                        && "subtasks".equals(parts[3])) {
 
-                try {
                     int epicId = Integer.parseInt(parts[2]);
                     manager.getEpic(epicId);
                     String json = gson.toJson(manager.getEpicSubtasks(epicId));
                     sendText(exchange, json);
-                } catch (NumberFormatException e) {
-                    sendServerError(exchange);
-                } catch (NotFoundException e) {
-                    sendNotFound(exchange, e.getMessage());
+                    return;
                 }
-                return;
-            }
 
-            super.handle(exchange);
+                super.handle(exchange);
+            } catch (ManagerTimeIntersectionException | IllegalArgumentException e) {
+                sendHasInteractions(exchange);
+            } catch (NotFoundException e) {
+                sendNotFound(exchange, e.getMessage());
+            } catch (Exception e) {
+                sendServerError(exchange);
+            }
         }
     }
 
     class HistoryHandler extends BaseHttpHandler implements HttpHandler {
-
-        @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String method = exchange.getRequestMethod();
-            URI uri = exchange.getRequestURI();
-
-            System.out.println("Обработка " + method + " " + uri.getPath());
-
-            try {
-                if (!"GET".equals(method)) {
-                    sendServerError(exchange);
-                    return;
-                }
-
-                String json = gson.toJson(manager.getHistory());
-                sendText(exchange, json);
-            } catch (Exception e) {
+            if (!"GET".equals(exchange.getRequestMethod())) {
                 sendServerError(exchange);
+                return;
             }
+            sendText(exchange, gson.toJson(manager.getHistory()));
         }
     }
 
     class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
-
-        @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String method = exchange.getRequestMethod();
-            URI uri = exchange.getRequestURI();
-
-            System.out.println("Обработка " + method + " " + uri.getPath());
-
-            try {
-                if (!"GET".equals(method)) {
-                    sendServerError(exchange);
-                    return;
-                }
-
-                String json = gson.toJson(manager.getPrioritizedTasks());
-                sendText(exchange, json);
-            } catch (Exception e) {
+            if (!"GET".equals(exchange.getRequestMethod())) {
                 sendServerError(exchange);
+                return;
             }
+            sendText(exchange, gson.toJson(manager.getPrioritizedTasks()));
         }
     }
 }

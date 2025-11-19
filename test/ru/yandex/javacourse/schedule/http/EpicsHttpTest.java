@@ -75,7 +75,7 @@ class EpicsHttpTest {
 
     @Test
     void getEpicById_notFound_returns404() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/epics?id=999");
+        URI uri = URI.create("http://localhost:8080/epics/999");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -92,7 +92,6 @@ class EpicsHttpTest {
         Epic epic = new Epic("Epic with subtasks", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
-
 
         Subtask s1 = new Subtask(
                 "Sub 1",
@@ -143,7 +142,6 @@ class EpicsHttpTest {
         assertEquals(404, response.statusCode(), "Для несуществующего эпика при запросе подзадач ожидается 404");
     }
 
-
     @Test
     void updateEpic_returns201_andChangesAreSaved() throws IOException, InterruptedException {
         Epic epic = new Epic("Old epic", "Old desc");
@@ -184,7 +182,6 @@ class EpicsHttpTest {
         assertEquals(404, response.statusCode(), "Обновление несуществующего эпика должно вернуть 404");
     }
 
-
     @Test
     void deleteEpicById_returns201_andEpicRemoved() throws IOException, InterruptedException {
         Epic e1 = new Epic("Epic 1", "Desc 1");
@@ -193,7 +190,7 @@ class EpicsHttpTest {
         manager.addNewEpic(e2);
 
         int idToDelete = e1.getId();
-        URI uri = URI.create("http://localhost:8080/epics?id=" + idToDelete);
+        URI uri = URI.create("http://localhost:8080/epics/" + idToDelete);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -201,7 +198,7 @@ class EpicsHttpTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         var epics = manager.getEpics();
         assertEquals(1, epics.size(), "Должен остаться один эпик");
@@ -221,7 +218,7 @@ class EpicsHttpTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         assertTrue(manager.getEpics().isEmpty(), "После DELETE /epics список эпиков должен быть пустым");
     }

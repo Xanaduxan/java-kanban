@@ -195,10 +195,9 @@ class SubtasksHttpTest {
         assertEquals("S2", subtasks[1].getName());
     }
 
-
     @Test
     void getSubtaskById_notFound_returns404() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/subtasks?id=999");
+        URI uri = URI.create("http://localhost:8080/subtasks/999");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -275,7 +274,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void deleteSubtaskById_returns201_andSubtaskRemoved() throws IOException, InterruptedException {
+    void deleteSubtaskById_returns200_andSubtaskRemoved() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
@@ -300,7 +299,7 @@ class SubtasksHttpTest {
         manager.addNewSubtask(s2);
 
         int idToDelete = s1.getId();
-        URI uri = URI.create("http://localhost:8080/subtasks?id=" + idToDelete);
+        URI uri = URI.create("http://localhost:8080/subtasks/" + idToDelete);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -308,7 +307,7 @@ class SubtasksHttpTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         var subtasks = manager.getSubtasks();
         assertEquals(1, subtasks.size());
@@ -316,7 +315,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void deleteAllSubtasks_returns201_andAllSubtasksRemoved() throws IOException, InterruptedException {
+    void deleteAllSubtasks_returns200_andAllSubtasksRemoved() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
@@ -346,7 +345,7 @@ class SubtasksHttpTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
         assertTrue(manager.getSubtasks().isEmpty());
     }
 }

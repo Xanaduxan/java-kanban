@@ -117,7 +117,6 @@ class TasksHttpTest {
         assertEquals(1, manager.getTasks().size(), "В менеджере должна остаться только первая задача");
     }
 
-
     @Test
     void getTasks_returns200_andAllTasks() throws IOException, InterruptedException {
         Task t1 = new Task(
@@ -166,7 +165,7 @@ class TasksHttpTest {
         manager.addNewTask(t);
         int id = t.getId();
 
-        URI uri = URI.create("http://localhost:8080/tasks?id=" + id);
+        URI uri = URI.create("http://localhost:8080/tasks/" + id);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -184,7 +183,7 @@ class TasksHttpTest {
 
     @Test
     void getTaskById_notFound_returns404() throws IOException, InterruptedException {
-        URI uri = URI.create("http://localhost:8080/tasks?id=999");
+        URI uri = URI.create("http://localhost:8080/tasks/999");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -195,7 +194,6 @@ class TasksHttpTest {
 
         assertEquals(404, response.statusCode(), "Для несуществующей задачи должен быть 404");
     }
-
 
     @Test
     void updateTask_returns201_andChangesAreSaved() throws IOException, InterruptedException {
@@ -254,9 +252,8 @@ class TasksHttpTest {
         assertEquals(404, response.statusCode(), "Обновление несуществующей задачи должно вернуть 404");
     }
 
-
     @Test
-    void deleteTaskById_returns201_andTaskRemoved() throws IOException, InterruptedException {
+    void deleteTaskById_returns200_andTaskRemoved() throws IOException, InterruptedException {
         Task t1 = new Task(
                 "T1",
                 "Task 1",
@@ -275,7 +272,7 @@ class TasksHttpTest {
         manager.addNewTask(t2);
 
         int idToDelete = t1.getId();
-        URI uri = URI.create("http://localhost:8080/tasks?id=" + idToDelete);
+        URI uri = URI.create("http://localhost:8080/tasks/" + idToDelete);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -284,13 +281,13 @@ class TasksHttpTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
         assertEquals(1, manager.getTasks().size(), "Должна остаться одна задача");
         assertEquals(t2.getId(), manager.getTasks().getFirst().getId());
     }
 
     @Test
-    void deleteAllTasks_returns201_andAllTasksRemoved() throws IOException, InterruptedException {
+    void deleteAllTasks_returns200_andAllTasksRemoved() throws IOException, InterruptedException {
         Task t1 = new Task(
                 "T1",
                 "Task 1",
@@ -315,7 +312,7 @@ class TasksHttpTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
         assertTrue(manager.getTasks().isEmpty(), "После DELETE /tasks список задач должен быть пустым");
     }
 }
