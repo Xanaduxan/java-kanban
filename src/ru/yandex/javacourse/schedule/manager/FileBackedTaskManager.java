@@ -194,7 +194,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-
     private String toString(Task task) {
         String epicCol = "";
         String durationCol = (task.getDuration() == null)
@@ -247,7 +246,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         int id = Integer.parseInt(fields[0]);
         String name = fields[2];
-        TaskStatus status = TaskStatus.valueOf(fields[3]);
+
+        String statusRaw = fields[3];
+        TaskStatus status;
+        if (statusRaw == null || statusRaw.isBlank() || "null".equalsIgnoreCase(statusRaw)) {
+            status = TaskStatus.NEW;
+        } else {
+            status = TaskStatus.valueOf(statusRaw);
+        }
         String description = fields[4];
         String epicStr = fields[5];
         String durStr = fields[6];

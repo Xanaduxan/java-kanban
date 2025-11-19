@@ -56,9 +56,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void subtaskMustBelongToExistingEpic() {
-        Subtask sub = new Subtask("S1", "d", NEW, 999);
-        assertNull(manager.addNewSubtask(sub), "Нельзя добавить подзадачу без существующего эпика");
+        assertThrows(NotFoundException.class, () ->
+                manager.addNewSubtask(new Subtask("S1", "d", NEW, 999))
+        );
     }
+
 
     @Test
     void epicShouldContainAddedSubtasks() {
