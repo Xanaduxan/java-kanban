@@ -31,7 +31,7 @@ class EpicsHttpTest {
     private HttpClient client;
 
     @BeforeEach
-    void setUp() throws IOException {
+    public void setUp() throws IOException {
         manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
         gson = new GsonBuilder()
@@ -53,7 +53,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void createEpic_returns201_andEpicIsStored() throws IOException, InterruptedException {
+    public void createEpic_returns201_andEpicIsStored() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Testing epic create");
         String json = gson.toJson(epic);
 
@@ -74,7 +74,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void getEpicById_notFound_returns404() throws IOException, InterruptedException {
+    public void getEpicById_notFound_returns404() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/epics/999");
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -87,7 +87,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void getEpicSubtasks_returns200_andAllSubtasksOfEpic() throws IOException, InterruptedException {
+    public void getEpicSubtasks_returns200_andAllSubtasksOfEpic() throws IOException, InterruptedException {
 
         Epic epic = new Epic("Epic with subtasks", "Desc");
         manager.addNewEpic(epic);
@@ -130,7 +130,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void getEpicSubtasks_forNonExistingEpic_returns404() throws IOException, InterruptedException {
+    public void getEpicSubtasks_forNonExistingEpic_returns404() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/epics/999/subtasks");
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -143,7 +143,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void updateEpic_returns201_andChangesAreSaved() throws IOException, InterruptedException {
+    public void updateEpic_returns201_andChangesAreSaved() throws IOException, InterruptedException {
         Epic epic = new Epic("Old epic", "Old desc");
         manager.addNewEpic(epic);
         int id = epic.getId();
@@ -167,7 +167,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void updateEpic_notFound_returns404() throws IOException, InterruptedException {
+    public void updateEpic_notFound_returns404() throws IOException, InterruptedException {
         Epic epic = new Epic("Ghost", "No such epic");
         epic.setId(999);
         String json = gson.toJson(epic);
@@ -183,7 +183,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void deleteEpicById_returns201_andEpicRemoved() throws IOException, InterruptedException {
+    public void deleteEpicById_returns201_andEpicRemoved() throws IOException, InterruptedException {
         Epic e1 = new Epic("Epic 1", "Desc 1");
         Epic e2 = new Epic("Epic 2", "Desc 2");
         manager.addNewEpic(e1);
@@ -206,7 +206,7 @@ class EpicsHttpTest {
     }
 
     @Test
-    void deleteAllEpics_returns201_andAllEpicsRemoved() throws IOException, InterruptedException {
+    public void deleteAllEpics_returns201_andAllEpicsRemoved() throws IOException, InterruptedException {
         Epic e1 = new Epic("Epic 1", "Desc 1");
         Epic e2 = new Epic("Epic 2", "Desc 2");
         manager.addNewEpic(e1);

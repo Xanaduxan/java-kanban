@@ -17,7 +17,7 @@ public class SubtaskTest {
     }
 
     @Test
-    void deleteSubtask_removesFromStoreEpicAndHistory() {
+    public void deleteSubtask_removesFromStoreEpicAndHistory() {
         TaskManager taskManager = new InMemoryTaskManager();
 
         int epicId = taskManager.addNewEpic(new Epic("E", "d"));
@@ -58,7 +58,7 @@ public class SubtaskTest {
     }
 
     @Test
-    void deletedSubtask_doesNotKeepOldId_andGetsNewIdWhenReadded() {
+    public void deletedSubtask_doesNotKeepOldId_andGetsNewIdWhenReadded() {
         TaskManager taskManager = new InMemoryTaskManager();
 
         int epicId = taskManager.addNewEpic(new Epic("E", "d"));

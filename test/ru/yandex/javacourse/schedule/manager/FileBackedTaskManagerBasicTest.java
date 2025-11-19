@@ -18,21 +18,21 @@ public class FileBackedTaskManagerBasicTest {
     private FileBackedTaskManager manager;
 
     @BeforeEach
-    void setUp() throws IOException {
+    public void setUp() throws IOException {
         tempFile = File.createTempFile("tasks", ".csv");
         Files.writeString(tempFile.toPath(), "", StandardCharsets.UTF_8);
         manager = new FileBackedTaskManager(tempFile.toPath());
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         if (tempFile != null && tempFile.exists()) {
             assertTrue(tempFile.delete());
         }
     }
 
     @Test
-    void testSaveAndLoadSingleTaskRoundTrip() {
+    public void testSaveAndLoadSingleTaskRoundTrip() {
         Task t = new Task("T1", "D1", TaskStatus.NEW);
         int id = manager.addNewTask(t);
         FileBackedTaskManager loaded = FileBackedTaskManager.loadFromFile(tempFile);
@@ -50,7 +50,7 @@ public class FileBackedTaskManagerBasicTest {
     }
 
     @Test
-    void testSaveAndLoadEpicWithSubtasksLinksAndStatusRestored() {
+    public void testSaveAndLoadEpicWithSubtasksLinksAndStatusRestored() {
         int epicId = manager.addNewEpic(new Epic("E1", "ED1"));
         int s1 = manager.addNewSubtask(new Subtask("S1", "SD1", TaskStatus.NEW, epicId));
         int s2 = manager.addNewSubtask(new Subtask("S2", "SD2", TaskStatus.DONE, epicId));
@@ -83,7 +83,7 @@ public class FileBackedTaskManagerBasicTest {
 
 
     @Test
-    void testAutosaveOnUpdateAndDeleteReflectedInFile() {
+    public void testAutosaveOnUpdateAndDeleteReflectedInFile() {
         int tid = manager.addNewTask(new Task("T", "D", TaskStatus.NEW));
 
         Task t = manager.getTask(tid);

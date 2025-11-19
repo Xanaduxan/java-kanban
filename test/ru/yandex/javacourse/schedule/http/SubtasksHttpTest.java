@@ -31,7 +31,7 @@ class SubtasksHttpTest {
     private HttpClient client;
 
     @BeforeEach
-    void setUp() throws IOException {
+    public void setUp() throws IOException {
         manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
         gson = new GsonBuilder()
@@ -52,7 +52,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void createSubtask_returns201_andSubtaskIsStored() throws IOException, InterruptedException {
+    public void createSubtask_returns201_andSubtaskIsStored() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "For subtasks");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
@@ -85,7 +85,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void createSubtask_withoutEpicId_returns404() throws IOException, InterruptedException {
+    public void createSubtask_withoutEpicId_returns404() throws IOException, InterruptedException {
         Subtask subtask = new Subtask(
                 "Sub without epic",
                 "No epicId",
@@ -109,7 +109,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void createSubtask_withOverlappingTime_returns406_andDoesNotCreateSecondSubtask()
+    public void createSubtask_withOverlappingTime_returns406_andDoesNotCreateSecondSubtask()
             throws IOException, InterruptedException {
 
         Epic epic = new Epic("Epic overlap", "Desc");
@@ -156,7 +156,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void getSubtasks_returns200_andAllSubtasks() throws IOException, InterruptedException {
+    public void getSubtasks_returns200_andAllSubtasks() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
@@ -196,7 +196,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void getSubtaskById_notFound_returns404() throws IOException, InterruptedException {
+    public void getSubtaskById_notFound_returns404() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/subtasks/999");
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -209,7 +209,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void updateSubtask_returns201_andChangesAreSaved() throws IOException, InterruptedException {
+    public void updateSubtask_returns201_andChangesAreSaved() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
@@ -247,7 +247,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void updateSubtask_notFound_returns404() throws IOException, InterruptedException {
+    public void updateSubtask_notFound_returns404() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
@@ -274,7 +274,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void deleteSubtaskById_returns200_andSubtaskRemoved() throws IOException, InterruptedException {
+    public void deleteSubtaskById_returns200_andSubtaskRemoved() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();
@@ -315,7 +315,7 @@ class SubtasksHttpTest {
     }
 
     @Test
-    void deleteAllSubtasks_returns200_andAllSubtasksRemoved() throws IOException, InterruptedException {
+    public void deleteAllSubtasks_returns200_andAllSubtasksRemoved() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Desc");
         manager.addNewEpic(epic);
         int epicId = epic.getId();

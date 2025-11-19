@@ -64,7 +64,7 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historyHasNoDuplicates() {
+    public void historyHasNoDuplicates() {
         TaskManager tm = new InMemoryTaskManager();
         int id = tm.addNewTask(new Task("A", "d", TaskStatus.NEW));
 
@@ -75,7 +75,7 @@ public class InMemoryHistoryManagerTest {
         assertEquals(id, tm.getHistory().getFirst().getId());
     }
     @Test
-    void removeFromHistoryBeginningMiddleEnd() {
+    public void removeFromHistoryBeginningMiddleEnd() {
         HistoryManager history = Managers.getDefaultHistory();
 
         Task t1 = new Task("T1", "desc", TaskStatus.NEW);

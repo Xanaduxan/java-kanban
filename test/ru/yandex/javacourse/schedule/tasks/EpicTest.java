@@ -40,7 +40,7 @@ public class EpicTest {
     }
 
     @Test
-    void deleteAllTasksEpicsAndSubtasks_clearsEverything() {
+    public void deleteAllTasksEpicsAndSubtasks_clearsEverything() {
         TaskManager manager = new InMemoryTaskManager();
 
 

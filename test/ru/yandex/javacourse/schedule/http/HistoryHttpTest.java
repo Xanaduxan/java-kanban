@@ -30,7 +30,7 @@ class HistoryHttpTest {
     private HttpClient client;
 
     @BeforeEach
-    void setUp() throws IOException {
+    public void setUp() throws IOException {
         manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
         gson = new GsonBuilder()
@@ -51,7 +51,7 @@ class HistoryHttpTest {
     }
 
     @Test
-    void getHistory_whenEmpty_returns200AndEmptyArray() throws IOException, InterruptedException {
+    public void getHistory_whenEmpty_returns200AndEmptyArray() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(historyUri())
                 .GET()
@@ -67,7 +67,7 @@ class HistoryHttpTest {
     }
 
     @Test
-    void getHistory_returnsEntitiesInAccessOrder() throws IOException, InterruptedException {
+    public void getHistory_returnsEntitiesInAccessOrder() throws IOException, InterruptedException {
         Task t1 = new Task(
                 "T1",
                 "Task 1",
@@ -108,7 +108,7 @@ class HistoryHttpTest {
     }
 
     @Test
-    void history_nonGetMethod_returns500() throws IOException, InterruptedException {
+    public void history_nonGetMethod_returns500() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(historyUri())
                 .POST(HttpRequest.BodyPublishers.ofString(""))

@@ -18,13 +18,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected abstract T createManager();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         manager = createManager();
     }
 
 
     @Test
-    void epic_allSubtasksNew_epicIsNEW() {
+    public void epic_allSubtasksNew_epicIsNEW() {
         int epicId = manager.addNewEpic(new Epic("Epic", "test"));
         manager.addNewSubtask(new Subtask("S1", "d", NEW, epicId));
         manager.addNewSubtask(new Subtask("S2", "d", NEW, epicId));
@@ -32,7 +32,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epic_allSubtasksDone_epicIsDONE() {
+    public void epic_allSubtasksDone_epicIsDONE() {
         int epicId = manager.addNewEpic(new Epic("Epic", "test"));
         manager.addNewSubtask(new Subtask("S1", "d", DONE, epicId));
         manager.addNewSubtask(new Subtask("S2", "d", DONE, epicId));
@@ -40,7 +40,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epic_mixedNewAndDone_epicIsIN_PROGRESS() {
+    public void epic_mixedNewAndDone_epicIsIN_PROGRESS() {
         int epicId = manager.addNewEpic(new Epic("Epic", "test"));
         manager.addNewSubtask(new Subtask("S1", "d", NEW, epicId));
         manager.addNewSubtask(new Subtask("S2", "d", DONE, epicId));
@@ -48,14 +48,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epic_withInProgressSubtask_epicIsIN_PROGRESS() {
+    public void epic_withInProgressSubtask_epicIsIN_PROGRESS() {
         int epicId = manager.addNewEpic(new Epic("Epic", "test"));
         manager.addNewSubtask(new Subtask("S1", "d", IN_PROGRESS, epicId));
         assertEquals(IN_PROGRESS, manager.getEpic(epicId).getStatus());
     }
 
     @Test
-    void subtaskMustBelongToExistingEpic() {
+    public void subtaskMustBelongToExistingEpic() {
         assertThrows(NotFoundException.class, () ->
                 manager.addNewSubtask(new Subtask("S1", "d", NEW, 999))
         );
@@ -63,7 +63,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
 
     @Test
-    void epicShouldContainAddedSubtasks() {
+    public void epicShouldContainAddedSubtasks() {
         int epicId = manager.addNewEpic(new Epic("Epic", "desc"));
         int subId = manager.addNewSubtask(new Subtask("S1", "d", NEW, epicId));
         Epic epic = manager.getEpic(epicId);
@@ -72,7 +72,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
 
     @Test
-    void tasksWithIntersectingTimeShouldThrowException() {
+    public void tasksWithIntersectingTimeShouldThrowException() {
         Task t1 = new Task("T1", "desc", NEW,
                 Duration.ofMinutes(60),
                 LocalDateTime.of(2025, 11, 6, 10, 0));
@@ -87,7 +87,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void tasksWithoutIntersectionCanBeAdded() {
+    public void tasksWithoutIntersectionCanBeAdded() {
         Task t1 = new Task("T1", "desc", NEW,
                 Duration.ofMinutes(60),
                 LocalDateTime.of(2025, 11, 6, 10, 0));
@@ -101,14 +101,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
 
     @Test
-    void canCreateAndGetTask() {
+    public void canCreateAndGetTask() {
         Task t = new Task("Test", "desc", NEW);
         int id = manager.addNewTask(t);
         assertNotNull(manager.getTask(id));
     }
 
     @Test
-    void canDeleteTask() {
+    public void canDeleteTask() {
         Task t = new Task("T", "D", NEW);
         int id = manager.addNewTask(t);
         manager.deleteTask(id);
@@ -116,12 +116,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getHistoryInitiallyEmpty() {
+    public void getHistoryInitiallyEmpty() {
         assertTrue(manager.getHistory().isEmpty());
     }
 
     @Test
-    void getPrioritizedTasksReturnsSortedList() {
+    public void getPrioritizedTasksReturnsSortedList() {
         Task t1 = new Task("T1", "desc", NEW,
                 Duration.ofMinutes(30),
                 LocalDateTime.of(2025, 11, 6, 9, 0));

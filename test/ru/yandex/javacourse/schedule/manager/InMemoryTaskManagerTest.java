@@ -17,7 +17,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void testAddTask() {
+    public void testAddTask() {
         Task task = new Task("Test 1", "Testing task 1", TaskStatus.NEW);
 
         int id = manager.addNewTask(task);
@@ -27,7 +27,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void testAddTaskWithId() {
+    public void testAddTaskWithId() {
         Task task = new Task(42, "Test 1", "Testing task 1", TaskStatus.NEW);
 
         int id = manager.addNewTask(task);
@@ -35,6 +35,5 @@ public class InMemoryTaskManagerTest {
         Task fromManager = manager.getTask(id);
         assertEquals(task, fromManager);
     }
-
 
 }

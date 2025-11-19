@@ -31,7 +31,7 @@ class TasksHttpTest {
     private HttpClient client;
 
     @BeforeEach
-    void setUp() throws IOException {
+    public void setUp() throws IOException {
         manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
         gson = new GsonBuilder()
@@ -53,7 +53,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void createTask_returns201_andTaskIsStored() throws IOException, InterruptedException {
+    public void createTask_returns201_andTaskIsStored() throws IOException, InterruptedException {
         Task task = new Task(
                 "Test task",
                 "Testing create",
@@ -79,7 +79,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void createTask_withOverlappingTime_returns406_andDoesNotCreateSecondTask()
+    public void createTask_withOverlappingTime_returns406_andDoesNotCreateSecondTask()
             throws IOException, InterruptedException {
 
         Task t1 = new Task(
@@ -118,7 +118,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void getTasks_returns200_andAllTasks() throws IOException, InterruptedException {
+    public void getTasks_returns200_andAllTasks() throws IOException, InterruptedException {
         Task t1 = new Task(
                 "T1",
                 "Task 1",
@@ -154,7 +154,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void getTaskById_returns200_andCorrectTask() throws IOException, InterruptedException {
+    public void getTaskById_returns200_andCorrectTask() throws IOException, InterruptedException {
         Task t = new Task(
                 "Single",
                 "By id",
@@ -182,7 +182,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void getTaskById_notFound_returns404() throws IOException, InterruptedException {
+    public void getTaskById_notFound_returns404() throws IOException, InterruptedException {
         URI uri = URI.create("http://localhost:8080/tasks/999");
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -196,7 +196,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void updateTask_returns201_andChangesAreSaved() throws IOException, InterruptedException {
+    public void updateTask_returns201_andChangesAreSaved() throws IOException, InterruptedException {
         Task t = new Task(
                 "Old",
                 "Old desc",
@@ -230,7 +230,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void updateTask_notFound_returns404() throws IOException, InterruptedException {
+    public void updateTask_notFound_returns404() throws IOException, InterruptedException {
         Task t = new Task(
                 "Ghost",
                 "No such task",
@@ -253,7 +253,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void deleteTaskById_returns200_andTaskRemoved() throws IOException, InterruptedException {
+    public void deleteTaskById_returns200_andTaskRemoved() throws IOException, InterruptedException {
         Task t1 = new Task(
                 "T1",
                 "Task 1",
@@ -287,7 +287,7 @@ class TasksHttpTest {
     }
 
     @Test
-    void deleteAllTasks_returns200_andAllTasksRemoved() throws IOException, InterruptedException {
+    public void deleteAllTasks_returns200_andAllTasksRemoved() throws IOException, InterruptedException {
         Task t1 = new Task(
                 "T1",
                 "Task 1",

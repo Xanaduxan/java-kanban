@@ -163,7 +163,7 @@ public class HttpTaskServer {
         }
     }
 
-    class TasksHandler extends EntityHandler<Task> {
+    private class TasksHandler extends EntityHandler<Task> {
         protected Class<Task> getEntityClass() {
             return Task.class;
         }
@@ -193,7 +193,7 @@ public class HttpTaskServer {
         }
     }
 
-    class SubtasksHandler extends EntityHandler<Subtask> {
+    private class SubtasksHandler extends EntityHandler<Subtask> {
         protected Class<Subtask> getEntityClass() {
             return Subtask.class;
         }
@@ -224,7 +224,7 @@ public class HttpTaskServer {
         }
     }
 
-    class EpicsHandler extends EntityHandler<Epic> {
+    private class EpicsHandler extends EntityHandler<Epic> {
         protected Class<Epic> getEntityClass() {
             return Epic.class;
         }
@@ -283,7 +283,7 @@ public class HttpTaskServer {
         }
     }
 
-    class HistoryHandler extends BaseHttpHandler implements HttpHandler {
+    private class HistoryHandler extends BaseHttpHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
             if (!"GET".equals(exchange.getRequestMethod())) {
                 sendServerError(exchange);
@@ -293,7 +293,7 @@ public class HttpTaskServer {
         }
     }
 
-    class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
+    private class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
             if (!"GET".equals(exchange.getRequestMethod())) {
                 sendServerError(exchange);

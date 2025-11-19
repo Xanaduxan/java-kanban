@@ -29,7 +29,7 @@ class PrioritizedHttpTest {
     private HttpClient client;
 
     @BeforeEach
-    void setUp() throws IOException {
+    public void setUp() throws IOException {
         TaskManager manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
         gson = new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter()).registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
@@ -47,7 +47,7 @@ class PrioritizedHttpTest {
     }
 
     @Test
-    void getPrioritized_whenEmpty_returns200AndEmptyArray() throws IOException, InterruptedException {
+    public void getPrioritized_whenEmpty_returns200AndEmptyArray() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder().uri(prioritizedUri()).GET().build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -61,7 +61,7 @@ class PrioritizedHttpTest {
 
 
     @Test
-    void prioritized_nonGetMethod_returns500() throws IOException, InterruptedException {
+    public void prioritized_nonGetMethod_returns500() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder().uri(prioritizedUri()).POST(HttpRequest.BodyPublishers.ofString("")).build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
