@@ -17,7 +17,7 @@ public class TaskTest {
 
 
     @Test
-    void deleteSubtaskCleansAll() {
+    public void deleteSubtaskCleansAll() {
         TaskManager taskManager = new InMemoryTaskManager();
         int epicId = taskManager.addNewEpic(new Epic("E", "d"));
         Integer s1 = taskManager.addNewSubtask(new Subtask("S1", "d1", TaskStatus.NEW, epicId));

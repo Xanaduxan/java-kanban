@@ -2,7 +2,6 @@ package ru.yandex.javacourse.schedule.tasks;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.javacourse.schedule.manager.InMemoryTaskManager;
-import ru.yandex.javacourse.schedule.manager.Managers;
 import ru.yandex.javacourse.schedule.manager.TaskManager;
 
 import java.util.List;
@@ -39,9 +38,10 @@ public class EpicTest {
         assertFalse(epic.getSubtaskIds().contains(s1), "deleted subtask id must be removed from epic");
         assertEquals(1, epic.getSubtaskIds().size());
     }
+
     @Test
-    void deleteAllTasksEpicsAndSubtasks_clearsEverything() {
-        TaskManager manager = Managers.getDefault();
+    public void deleteAllTasksEpicsAndSubtasks_clearsEverything() {
+        TaskManager manager = new InMemoryTaskManager();
 
 
         int taskId = manager.addNewTask(new Task("Task1", "desc", NEW));
